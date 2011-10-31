@@ -1,0 +1,32 @@
+---
+abstract: 'A simple module to access SugarCRM via Rest services'
+author:
+  - 'Nito Martinez <Nito@Qindel.ES>'
+build_requires:
+  Test::More: 0
+configure_requires:
+  Module::Build: 0.36
+generated_by: 'Module::Build version 0.3607'
+license: gpl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Net-SugarCRM
+provides:
+  Net::SugarCRM:
+    file: lib/Net/SugarCRM.pm
+    version: 1.12816
+requires:
+  File::Spec: 0
+  JSON: 0
+  LWP::UserAgent: 0
+  Log::Log4perl: 0
+  Moose: 0
+  MooseX::Log::Log4perl: 0
+  MooseX::Singleton: 0
+  MooseX::Types::Path::Class: 0
+  Readonly: 0
+  Try::Tiny: 0
+resources:
+  license: http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt
+version: 1.12816
