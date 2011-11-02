@@ -29,18 +29,17 @@ Readonly my $EMAILMARKETINGS => 'EmailMarketing'; # email templates association
 Readonly my $USERS => 'Users';
 Readonly my $CURRENCIES => 'Currencies';
 
-
 =head1 NAME
 
 Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 12832 $
+Version $Revision: 12833 $
 
 =cut
 
-our $VERSION = sprintf "1.%05d", q$Revision: 12832 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "1.%05d", q$Revision: 12833 $ =~ /(\d+)/xg;
 
 =head1 DESCRIPTION
 
