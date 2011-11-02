@@ -14,6 +14,7 @@ t/50-account.t
 t/60-opportunity.t
 t/70-getmailentry.t
 t/75-add-note.t
+t/77-currency.t
 t/80-mailinglist.t
 t/90-send-campaign-mail.t
 t/manifest.t

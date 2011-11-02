@@ -27,6 +27,7 @@ Readonly my $CAMPAIGNS => 'Campaigns';
 Readonly my $PROSPECTLISTS => 'ProspectLists';
 Readonly my $EMAILMARKETINGS => 'EmailMarketing'; # email templates association
 Readonly my $USERS => 'Users';
+Readonly my $CURRENCIES => 'Currencies';
 
 
 =head1 NAME
@@ -35,11 +36,11 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 12816 $
+Version $Revision: 12832 $
 
 =cut
 
-our $VERSION = sprintf "1.%05d", q$Revision: 12816 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "1.%05d", q$Revision: 12832 $ =~ /(\d+)/xg;
 
 =head1 DESCRIPTION
 
@@ -1773,6 +1774,175 @@ sub update_account {
     my ($self, $accountid, $attributes) = @_;
     return $self->update_module_entry($ACCOUNTS, $accountid, $attributes);
 }
+
+
+=head2 Currency
+
+Currency methods
+
+=head3 create_currency
+
+Input: 
+
+ * A hash reference of attributes for the Currency. Valid values are name, symbol, iso4217, conversion_rate
+
+Output:
+
+ * The created id for the currency
+
+
+=cut
+
+sub create_currency {
+    my ($self, $attributes) = @_;
+    return $self->create_module_entry($CURRENCIES, $attributes);
+}
+
+
+=head3 get_currencies
+
+Returns the currency entry, searching for an attribute
+
+Input:
+ * query string. This must be one of the valid attributes in the currencies or currencies_cstm table. 
+Output:
+
+ * A reference to a an array of currency entries,
+   [] if none found, and 
+   confess on error
+ 
+
+=cut
+
+sub get_currencies {
+    my ($self, $query) = @_;
+    return $self->get_module_entries($CURRENCIES, $query);
+}
+
+
+=head3 get_currency_ids
+
+Returns an array of currency id, searching for query see L<get_currencies> for more info.
+
+Input:
+ * query
+
+Output:
+
+ * A reference to an array of currency id, and confess on error 
+
+=cut
+
+sub get_currency_ids {
+    my ($self, $query) = @_;
+    return $self->get_module_ids($CURRENCIES, $query);
+}
+
+=head3 get_unique_currency_id
+
+Returns the currency id, searching for query $query
+If none is found undef is returned, and if more than one is found
+an error is issued.
+
+This method should only be used if you can garantee that you have only one
+currency with the same email address
+
+Input:
+ * query (see L<get_currencies> for more info)
+
+Output:
+
+ * currencyid found, 0 if none is found, and confess on error or if more than
+   one currencyid is found.
+ 
+
+=cut
+
+sub get_unique_currency_id {
+    my ($self, $query) = @_;
+    return $self->get_unique_module_id($CURRENCIES, $query);
+}
+
+=head3 get_currency
+
+Returns the currency entry, given an currencyid
+
+Input:
+ * currencyid
+
+Output:
+
+ * A currency entry,
+   undef if none found, and 
+   confess on error
+ 
+=cut
+
+sub get_currency {
+    my ($self, $currencyid) = @_;
+    return $self->get_module_entry($CURRENCIES, $currencyid);
+}
+
+
+=head3 get_currency_attribute
+
+Returns the value of the attribute for a given currency id,
+If the attribute or currency id is not found undef is returned.
+
+Input:
+ * currencyid
+ * attribute name
+
+Output:
+
+ * attribute value or undef (if the currencyid is not found, the attribute does not exists)
+ 
+
+=cut
+
+sub get_currency_attribute {
+    my ($self, $currencyid, $attribute) = @_;
+    return $self->get_module_attribute($CURRENCIES, $currencyid, $attribute);
+}
+
+=head3 delete_currency_by_id
+
+Deletes the currencyid indicated by $id
+
+Input:
+ * currencyid
+
+Output:
+
+ * 1 if the currencyid was modified, 0 if no currencyid was found and confess on error
+
+=cut
+
+sub delete_currency_by_id {
+    my ($self, $currencyid) = @_;
+    return $self->delete_module_entry_by_id($CURRENCIES, $currencyid);
+}
+
+=head3 update_currency
+
+Updates the currency attributes
+
+Input:
+ * currencyid
+ * A hash reference of attribute pairs. Example { website => 'http://newsite.org'}
+
+Output:
+
+ * 1 if the currencyid was modified, 0 if no currencyid was found and confess on error
+
+=cut
+
+sub update_currency {
+    my ($self, $currencyid, $attributes) = @_;
+    return $self->update_module_entry($CURRENCIES, $currencyid, $attributes);
+}
+
+
 
 
 
