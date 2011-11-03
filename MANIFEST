@@ -5,6 +5,7 @@ MANIFEST.SKIP
 ignore.txt
 README
 lib/Net/SugarCRM.pm
+lib/Net/SugarCRM/Tutorial.pod
 t/00-load.t
 t/10-login.t
 t/20-modules.t

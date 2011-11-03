@@ -35,11 +35,11 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 12833 $
+Version $Revision: 12839 $
 
 =cut
 
-our $VERSION = sprintf "1.%05d", q$Revision: 12833 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "1.%05d", q$Revision: 12839 $ =~ /(\d+)/xg;
 
 =head1 DESCRIPTION
 
@@ -55,6 +55,8 @@ ml.html#9000412
 
 Most of the attributes values that you can use, you need to get them from the description
 of the mysql tables leads, accounts, contacts, ...
+
+See also L<Net::SugarCRM::Tutorial>
 
 =head2 Examples
 
@@ -3314,7 +3316,7 @@ Nito Martinez, C<< <Nito at Qindel.ES> >>
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-sugarcrm-client-rest at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=SugarCRM-Client-REST>.  I will be notified, and then you'll
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Net-SugarCRM>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 
@@ -3324,6 +3326,7 @@ You can find documentation for this module with the perldoc command.
 
     perldoc Net::SugarCRM
 
+    perldoc Net::SugarCRM::Tutorial
 
 You can also look for information at:
 
@@ -3331,19 +3334,19 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=SugarCRM-Client-REST>
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Net-SugarCRM>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/SugarCRM-Client-REST>
+L<http://annocpan.org/dist/Net-SugarCRM>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/SugarCRM-Client-REST>
+L<http://cpanratings.perl.org/d/Net-SugarCRM>
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/SugarCRM-Client-REST/>
+L<http://search.cpan.org/dist/Net-SugarCRM/>
 
 =back
 
