@@ -18,16 +18,16 @@ BEGIN {
     }
 }
 
-Readonly my $LEADS => 'Leads';
-Readonly my $NOTES => 'Notes';
-Readonly my $ACCOUNTS => 'Accounts';
-Readonly my $CONTACTS => 'Contacts';
-Readonly my $OPPORTUNITIES => 'Opportunities';
-Readonly my $CAMPAIGNS => 'Campaigns';
-Readonly my $PROSPECTLISTS => 'ProspectLists';
-Readonly my $EMAILMARKETINGS => 'EmailMarketing'; # email templates association
-Readonly my $USERS => 'Users';
-Readonly my $CURRENCIES => 'Currencies';
+Readonly our $LEADS => 'Leads';
+Readonly our $NOTES => 'Notes';
+Readonly our $ACCOUNTS => 'Accounts';
+Readonly our $CONTACTS => 'Contacts';
+Readonly our $OPPORTUNITIES => 'Opportunities';
+Readonly our $CAMPAIGNS => 'Campaigns';
+Readonly our $PROSPECTLISTS => 'ProspectLists';
+Readonly our $EMAILMARKETINGS => 'EmailMarketing'; # email templates association
+Readonly our $USERS => 'Users';
+Readonly our $CURRENCIES => 'Currencies';
 
 =head1 NAME
 
@@ -35,11 +35,11 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 12839 $
+Version $Revision: 12855 $
 
 =cut
 
-our $VERSION = sprintf "1.%05d", q$Revision: 12839 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "1.%05d", q$Revision: 12855 $ =~ /(\d+)/xg;
 
 =head1 DESCRIPTION
 

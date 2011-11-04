@@ -15,7 +15,7 @@ name: Net-SugarCRM
 provides:
   Net::SugarCRM:
     file: lib/Net/SugarCRM.pm
-    version: 1.12839
+    version: 1.12855
 requires:
   File::Spec: 0
   JSON: 0
@@ -29,4 +29,4 @@ requires:
   Try::Tiny: 0
 resources:
   license: http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt
-version: 1.12839
+version: 1.12855
