@@ -243,6 +243,7 @@ And now let's close the lead
        opportunity_id => $opportunity_id,
        contact_id => $contactid,
        status => 'Converted',
+       converted => 1,
  };
 
 =head2 Add a note

@@ -5,6 +5,7 @@ WriteMakefile
           'NAME' => 'Net::SugarCRM',
           'VERSION_FROM' => 'lib/Net/SugarCRM.pm',
           'PREREQ_PM' => {
+                           'DateTime' => 0,
                            'File::Spec' => 0,
                            'JSON' => 0,
                            'LWP::UserAgent' => 0,

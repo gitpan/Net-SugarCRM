@@ -21,6 +21,7 @@ my $builder = Module::Build->new(
 	'LWP::UserAgent' => 0,
 	'Readonly' => 0,
 	'Try::Tiny' => 0,
+	'DateTime' => 0,
     },
     add_to_cleanup      => [ 'Net-SugarCRM-*' ],
     create_makefile_pl => 'traditional',

@@ -35,11 +35,12 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 12855 $
+Version $Revision: 12860 $
 
 =cut
 
-our $VERSION = sprintf "1.%05d", q$Revision: 12855 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "1.%05d", q$Revision: 12860 $ =~ /(\d+)/xg;
+
 
 =head1 DESCRIPTION
 
@@ -57,6 +58,7 @@ Most of the attributes values that you can use, you need to get them from the de
 of the mysql tables leads, accounts, contacts, ...
 
 See also L<Net::SugarCRM::Tutorial>
+
 
 =head2 Examples
 
