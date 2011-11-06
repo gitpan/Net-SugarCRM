@@ -22,6 +22,7 @@ my $builder = Module::Build->new(
 	'Readonly' => 0,
 	'Try::Tiny' => 0,
 	'DateTime' => 0,
+	'DBI' => 0,
     },
     add_to_cleanup      => [ 'Net-SugarCRM-*' ],
     create_makefile_pl => 'traditional',

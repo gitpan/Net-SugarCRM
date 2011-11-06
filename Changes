@@ -1,5 +1,7 @@
 Revision history for Net-SugarCRM
 
+1.12860 6/11/2011
+        Added DBI dependency
 1.12860 5/11/2011
         Added converted attribute in doc and dependency for DateTime
 1.12855 4/11/2011

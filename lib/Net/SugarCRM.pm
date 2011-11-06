@@ -10,6 +10,7 @@ use Data::Dumper;
 use Readonly;
 use Try::Tiny;
 use DBI;
+
 with 'MooseX::Log::Log4perl';
 
 BEGIN {
@@ -35,11 +36,11 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 12860 $
+Version $Revision: 12863 $
 
 =cut
 
-our $VERSION = sprintf "1.%05d", q$Revision: 12860 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "1.%05d", q$Revision: 12863 $ =~ /(\d+)/xg;
 
 
 =head1 DESCRIPTION
