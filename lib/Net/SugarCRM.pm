@@ -36,11 +36,11 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 12863 $
+Version $Revision: 12990 $
 
 =cut
 
-our $VERSION = sprintf "1.%05d", q$Revision: 12863 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "1.%05d", q$Revision: 12990 $ =~ /(\d+)/xg;
 
 
 =head1 DESCRIPTION
@@ -221,6 +221,7 @@ has '_module_id_for_prospect_list' =>
           my $ret_val = {
               $LEADS => 'leads.id',
               $CONTACTS => 'contacts.id',
+              $ACCOUNTS => 'accounts.id',
           };
           return $ret_val;
       });
@@ -2795,7 +2796,8 @@ sub _send_prospectlist_marketing_email_force_verify_params {
     confess "email not specified:".Dumper($attrs)
         if (!exists($$attrs{email}));
     confess "related_type is not $CONTACTS or $LEADS:".Dumper($attrs)
-        if ($$attrs{related_type} ne $CONTACTS && $$attrs{related_type} ne $LEADS);
+        if ($$attrs{related_type} ne $CONTACTS && $$attrs{related_type} ne $LEADS &&
+	    $$attrs{related_type} ne $ACCOUNTS);
     confess "related_id not specified:".Dumper($attrs)
         if (!exists($$attrs{related_id}));
     # Just verify that the related_id and related_type exists

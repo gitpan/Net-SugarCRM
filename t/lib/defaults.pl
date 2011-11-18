@@ -14,3 +14,4 @@ use File::Temp;
 # our $testdbpass='pass';
 # our $testemail1='myemail1@mydomain.org';
 # our $testemail2='myemail2@mydomain.org';
+1;
