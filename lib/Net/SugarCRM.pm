@@ -36,11 +36,12 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 12990 $
+Version $Revision: 14455 $
 
 =cut
 
-our $VERSION = sprintf "1.%05d", q$Revision: 12990 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "1.%05d", q$Revision: 14455 $ =~ /(\d+)/xg;
+
 
 
 =head1 DESCRIPTION
@@ -776,6 +777,35 @@ sub delete_module_entry_by_id {
     
 }
 
+=head3 get_module_link_ids
+
+Returns related ids for a given module, searching for an id
+
+Input:
+
+ * module name
+ * link_field_name
+ * module id
+
+Output:
+
+ * A reference to an array of related ids
+
+=cut
+
+sub get_module_link_ids {
+    my ($self, $module, $link, $id) = @_;
+    
+    my $sessionid = $self->sessionid;
+    my $rest_data = qq({"session":"$sessionid","module_name":"$module","module_id":"$id","link_field_name":"$link"});
+
+    my $response = $self->_rest_request('get_relationships', $rest_data);
+    $self->log->debug("Module entry for module $module with id <$id> found was:".Dumper($response));
+
+    my @entriesids = map { $_->{id} } @{$response->{entry_list}};
+    return \@entriesids;
+}
+
 =head3 update_module_entry
 
 Updates the module entry attributes
@@ -1155,7 +1185,7 @@ sub update_lead {
 }
 
 
-=head3 Contacts
+=head2 Contacts
 
 Contacts methods
 
@@ -1403,6 +1433,26 @@ sub get_unique_contact_id_from_mail {
     my ($self, $mail) = @_;
     return $self->get_unique_module_id_from_mail($CONTACTS, $mail);
 }
+
+=head3 get_contact_account_ids
+
+Find all accounts associated with the specified contact
+
+Input:
+
+  * contactid
+
+Output:
+
+  * A reference to an array of account ids
+
+=cut
+
+sub get_contact_account_ids {
+    my ($self, $id) = @_;
+    return $self->get_module_link_ids($CONTACTS, 'accounts', $id);
+}
+
 
 =head3 delete_contact_by_id
 
@@ -1715,6 +1765,25 @@ Output:
 sub get_unique_account_id_from_mail {
     my ($self, $mail) = @_;
     return $self->get_unique_module_id_from_mail($ACCOUNTS, $mail);
+}
+
+=head3 get_account_contact_ids
+
+Find all contacts associated with the specified account
+
+Input:
+
+  * accountid
+
+Output:
+
+  * A reference to an array of contact ids
+
+=cut
+
+sub get_account_contact_ids {
+    my ($self, $id) = @_;
+    return $self->get_module_link_ids($ACCOUNTS, 'contacts', $id);
 }
 
 =head3 delete_account_by_id
@@ -3358,6 +3427,11 @@ L<http://search.cpan.org/dist/Net-SugarCRM/>
 
 =head1 ACKNOWLEDGEMENTS
 
+=over 4
+
+=item * Thanks to Phil Hallows Globe Microsystems L<www.globemicro.com> for contributing with get_module_link_ids and get_contact_account_ids  the methods
+
+=back
 
 =head1 LICENSE AND COPYRIGHT
 

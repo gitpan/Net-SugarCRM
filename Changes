@@ -1,5 +1,7 @@
 Revision history for Net-SugarCRM
 
+1.14455 10/03/2012
+        Added patch for get_module_link_ids get_contact_account_ids from Phil Hallows http://www.globemicro.com
 1.12990 18/11/2011
         Added support for sending emails in the accounts module
 1.12860 6/11/2011
