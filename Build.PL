@@ -16,7 +16,6 @@ my $builder = Module::Build->new(
 	'Moose' => 0,
 	'MooseX::Log::Log4perl' => 0,
 	'MooseX::Types::Path::Class' => 0,
-	'MooseX::Singleton' => 0,
 	'JSON' => 0,
 	'LWP::UserAgent' => 0,
 	'Readonly' => 0,

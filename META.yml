@@ -15,7 +15,7 @@ name: Net-SugarCRM
 provides:
   Net::SugarCRM:
     file: lib/Net/SugarCRM.pm
-    version: 1.14455
+    version: 1.15262
 requires:
   DBI: 0
   DateTime: 0
@@ -25,10 +25,9 @@ requires:
   Log::Log4perl: 0
   Moose: 0
   MooseX::Log::Log4perl: 0
-  MooseX::Singleton: 0
   MooseX::Types::Path::Class: 0
   Readonly: 0
   Try::Tiny: 0
 resources:
   license: http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt
-version: 1.14455
+version: 1.15262
