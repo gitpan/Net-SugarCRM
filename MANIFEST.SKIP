@@ -15,3 +15,4 @@ Net-SugarCRM-*
 .*~
 ^debian/
 .*.bak
+^MYMETA\.json$

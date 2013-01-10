@@ -9,9 +9,11 @@ use JSON;
 use Data::Dumper;
 use Readonly;
 use Try::Tiny;
+use HTTP::Request::Common;
 use DBI;
+use Carp qw(croak);
 
-with 'MooseX::Log::Log4perl';
+use Net::SugarCRM::Entry;
 
 BEGIN {
     if(!(Log::Log4perl->initialized())) {
@@ -36,12 +38,12 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 15262 $
+Version $Revision: 17723 $
 
 
 =cut
 
-our $VERSION = sprintf "1.%05d", q$Revision: 15262 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "2.%05d", q$Revision: 17723 $ =~ /(\d+)/xg;
 
 
 
@@ -173,8 +175,10 @@ has 'globalua' => ( is => 'rw', isa => 'LWP::UserAgent', builder => '_buildUa');
 
 sub _buildUa {
     my $self = shift;
-    my $globalua = LWP::UserAgent->new;
-    $globalua->agent("Net-SugarCRM/0.1 ");
+    my $globalua = LWP::UserAgent->new(
+        agent => "Net-SugarCRM/$VERSION",
+        keep_alive => 1,
+    );
     $globalua->default_header('Accept' => 'application/json');
     return $globalua;
 }
@@ -298,6 +302,12 @@ sub sessionid {
     return $self->_sessionid;
 }
 
+# Logger with a known, fixed category
+has 'log' => (
+    is => 'rw',
+    lazy => 1,
+    default => sub { Log::Log4perl->get_logger },
+);
 
 =head1 METHODS
 
@@ -312,21 +322,34 @@ sub _rest_request {
     my ($self, $method, $rest_data) = @_;
 
     my $res = $self->_rest_request_no_json($method, $rest_data);
-    my $response = JSON->new->decode($res->content);
-    confess "Error getting id <".$res->status_line."> fetching ".Dumper($res->content)
-        if (exists($$response{number}) && exists($$response{name}) && exists($$response{description}));
+    my ($response, $msg) = try {
+        return(JSON->new->decode($res->content), 0);
+    } catch {
+        return({}, "SugarCRM internal error: ".$res->content);
+    };
+    if ($msg or (exists($$response{number}) && exists($$response{name}) &&
+        exists($$response{description}))) {
+        $msg = "Error getting id <".$res->status_line."> fetching ".Dumper($res->content)
+            unless $msg;
+        $self->log->logconfess($msg);
+    }
     $self->log->debug("Success rest method <$method>\n");
     return $response;
 }
 
 sub _rest_request_no_json {
     my ($self, $method, $rest_data) = @_;
-    my $content = 'method='.$method.'&input_type=json&response_type=json&rest_data='.$rest_data;
-    my $headers= HTTP::Headers->new(Accept=>'application/json');
-    my $req = HTTP::Request->new(POST => $self->url, $headers, $content);
-    $req->content_type('application/x-www-form-urlencoded');
+    my $req = POST($self->url, Accept=>'application/json', Content => [
+        method          => $method,
+        input_type      => 'json',
+        response_type   => 'json',
+        rest_data       => $rest_data
+    ]);
+
     my $res = $self->globalua->request($req);
-    confess "Error <".$res->status_line."> fetching ".Dumper($res->request) if ($res->is_error);
+    if ($res->is_error) {
+        $self->log->logconfess("Error <".$res->status_line."> fetching ".Dumper($res->request));
+    }
     return $res;
 }
 
@@ -382,7 +405,11 @@ sub logout {
     my $rest_data = encode_json({
             session => $self->_sessionid,
         });
-    my $res = $self->_rest_request_no_json('logout', $rest_data);
+    my $res = try {
+        $self->_rest_request_no_json('logout', $rest_data);
+    } catch {
+        $self->log->error("Error in SugarCRM: method returned invalid JSON: $rest_data");
+    };
     if ($res->content ne 'null') {
         $self->log->error("Error logging out user ".$self->restuser." <".$res->status_line."> fetching ".Dumper($res->content)) ;
     } else {
@@ -453,7 +480,7 @@ sub create_module_entry {
     my ($self, $module, $attributes) = @_;
 
     foreach my $required_attr (@{$self->required_attr->{$module}}) {
-        confess "No $required_attr attribute. Not creating entry in $module for: ".Dumper($attributes)
+        $self->log->logconfess("No $required_attr attribute. Not creating entry in $module for: ".Dumper($attributes))
             if (!exists($$attributes{$required_attr}) ||
                 !defined($$attributes{$required_attr}) ||
                 $$attributes{$required_attr} eq '');
@@ -505,12 +532,12 @@ sub get_module_entries {
     my $response = $self->_rest_request('get_entry_list', $rest_data);
     $self->log->debug("Module entry for module $module with query <$query> found was:".Dumper($response));
     if ($response->{total_count} == 0) {
-        $self->log->info( "No entries found for module $module and query $query and sessionid ".$self->sessionid."\n");
+        $self->log->debug( "No entries found for module $module and query $query and sessionid ".$self->sessionid."\n");
         return [];
     }
-    $self->log->info( "Successfully found entry for module $module for query $query and sessionid ".$self->sessionid."\n");
+    $self->log->trace( "Successfully found entry for module $module for query $query and sessionid ".$self->sessionid."\n");
 
-    return $response->{entry_list};
+    return [map { Net::SugarCRM::Entry->new($_) } @{$response->{entry_list}}];
 }
 
 =head3 get_module_ids
@@ -557,9 +584,8 @@ Output:
 sub get_unique_module_id {
     my ($self, $module, $query) = @_;
     my $entries = $self->get_module_ids($module, $query);
-    return ()
-        if ($#$entries == -1);
-    confess "More than one module entry is found for module $module searching for query $query"
+    return () if ($#$entries == -1);
+    $self->log->logconfess("More than one module entry is found for module $module searching for query $query")
         if ($#$entries > 0);
     return $entries->[0];
 }
@@ -584,18 +610,19 @@ Output:
 sub get_module_entry {
     my ($self, $module, $id) = @_;
     if (!exists($self->_module_id_for_search->{$module})) {
-        confess "The module $module cannot be used to search by mail address";
+        $self->log->logconfess("The module $module cannot be used to search by ID");
     }
+    $self->log->logconfess("ID is required") unless defined $id;
     my $rest_data = '{"session": "'.$self->sessionid.'", "module_name": "'.$module.'", "query": "'.$self->_module_id_for_search->{$module}.' = \"'.$id.'\"" } ';
     my $response = $self->_rest_request('get_entry_list', $rest_data);
     $self->log->debug("Module entry for module $module and id $id found was:".Dumper($response));
     if ($response->{total_count} == 0) {
-        $self->log->info( "No entries found found for id $id in module $module and sessionid ".$self->sessionid."\n");
-        return [];
+        $self->log->debug( "No entries found found for id $id in module $module and sessionid ".$self->sessionid."\n");
+        return ();
     }
-    $self->log->info( "Successfully found entry with for id $id in module $module and sessionid ".$self->sessionid."\n");
+    $self->log->trace("Successfully found entry with for id $id in module $module and sessionid ".$self->sessionid."\n");
 
-    return $response->{entry_list}->[0];
+    return Net::SugarCRM::Entry->new($response->{entry_list}->[0]);
 }
 
 =head3 get_module_attribute
@@ -630,8 +657,8 @@ Output:
 sub get_module_attribute {
     my ($self, $module, $id, $attribute) = @_;
     my $entry = $self->get_module_entry($module, $id);
-    if (ref $entry eq 'HASH' && exists($entry->{name_value_list}->{$attribute}->{value})) {
-        return $entry->{name_value_list}->{$attribute}->{value};
+    if (defined $entry && exists($entry->{name_value_list}{$attribute})) {
+        return $entry->{name_value_list}{$attribute}{value};
     }
     return ();
 }
@@ -662,7 +689,7 @@ sub get_module_entries_from_mail {
     my ($self, $module, $mail) = @_;
     my $umail = uc $mail;
     if (!exists($self->_module_id_for_mail_search->{$module})) {
-        confess "The module $module cannot be used to search by mail address";
+        $self->log->logconfess("The module $module cannot be used to search by mail address");
     }
     my $query = $self->_module_id_for_mail_search->{$module}.' in ( SELECT eabr.bean_id FROM email_addr_bean_rel eabr JOIN email_addresses ea ON (ea.id = eabr.email_address_id) WHERE eabr.deleted=0 AND ea.email_address_caps = "'.$umail.'")';
     return $self->get_module_entries($module, $query);
@@ -731,7 +758,7 @@ sub get_unique_module_id_from_mail {
     my $entries = $self->get_module_ids_from_mail($module, $mail);
     return ()
         if ($#$entries == -1);
-    confess "More than one module entry is found searching for mail $mail and module $module"
+    $self->log->logconfess("More than one module entry is found searching for mail $mail and module $module")
         if ($#$entries > 0);
     return $entries->[0];
 }
@@ -2369,13 +2396,13 @@ sub get_mail_entry {
     my $response = $self->_rest_request('get_entry_list', $rest_data);
     $self->log->debug("Email found was:".Dumper($response));
     if ($response->{total_count} > 1) {
-        confess "Found more than one entry with for mail $mail and sessionid $self->sessionid:".Dumper($response);
+        $self->log->logconfess("Found more than one entry with for mail $mail and sessionid $self->sessionid:".Dumper($response));
     }
     if ($response->{total_count} == 0) {
-        $self->log->info( "No entries found found for mail $mail and sessionid ".$self->sessionid."\n");
+        $self->log->debug( "No entries found found for mail $mail and sessionid ".$self->sessionid."\n");
         return;
     }
-    $self->log->info( "Successfully found entry with for mail $mail and sessionid ".$self->sessionid."\n");
+    $self->log->trace( "Successfully found entry with for mail $mail and sessionid ".$self->sessionid."\n");
     return $response->{entry_list}->[0];
 }
 
@@ -2689,19 +2716,21 @@ Output:
 
 sub add_module_id_to_prospect_list {
     my ($self, $module, $id, $prospect_list) = @_;
-    confess "Module $module cannot be added to a target list" 
+    $self->log->logconfess("Module $module cannot be added to a target list")
         if (!exists($self->_module_id_for_prospect_list->{$module}));
 
     if (!defined($self->get_module_entry($module, $id))) {
-        confess "Not found module $module and id $id. Check that the id is valid";
+        $self->log->logconfess("Not found module $module and id $id. Check that the id is valid");
     }
     if (!defined($self->get_module_entry($PROSPECTLISTS, $prospect_list))) {
-        confess "Not found module $module and id $id. Check that the id is valid";
+        $self->log->logconfess("Not found module $module and id $id. Check that the id is valid");
     }
     my $rest_data = '{"session": "'.$self->sessionid.'", "module_name": "'.$module.'", "module_id": "'.$id.'", "link_field_name": "prospect_lists", "related_ids": '.
         '"'.$prospect_list.'" }';
     my $response = $self->_rest_request('set_relationship', $rest_data);
-    $self->log->info( "Successfully created link from module $module and $id to target list  <".$prospect_list.."> entry with sessionid ".$self->sessionid."\n");
+    $self->log->info( "Successfully created link from module \"$module\" and "
+        ."id \"$id\" to target list \"$prospect_list\" entry with sessionid "
+        ."\"".$self->sessionid."\"");
     $self->log->debug("Module id $id in module $module linked was:".Dumper($response));
     return ($response->{created} == 1) ? 1 : undef;
 
@@ -2723,7 +2752,7 @@ Output:
 
 sub delete_module_id_from_prospect_list {
     my ($self, $module, $id, $prospect_list) = @_;
-    confess "Module $module cannot be added to a target list" 
+    $self->log->logconfess("Module $module cannot be added to a target list")
         if (!exists($self->_module_id_for_prospect_list->{$module}));
 
     # Need to set both deleted and delete, if not it doesn't work in 6.2.1 at least...
@@ -2855,26 +2884,26 @@ this method is a facility method to add contact to a prospect_list, delete all t
 # Verifies params and returns mail
 sub _send_prospectlist_marketing_email_force_verify_params {
     my ($self, $attrs) = @_;
-    confess "campaign_name not specified:".Dumper($attrs)
-        if (!exists($$attrs{campaign_name}));
-    confess "emailmarketing_name not specified:".Dumper($attrs)
-        if (!exists($$attrs{emailmarketing_name}));
-    confess "prospectlist_name not specified:".Dumper($attrs)
-        if (!exists($$attrs{prospectlist_name}));
-    confess "related_type not specified:".Dumper($attrs)
-        if (!exists($$attrs{related_type}));
-    confess "email not specified:".Dumper($attrs)
-        if (!exists($$attrs{email}));
-    confess "related_type is not $CONTACTS or $LEADS:".Dumper($attrs)
+    $self->log->logconfess("campaign_name not specified:".Dumper($attrs))
+        if (!defined($$attrs{campaign_name}));
+    $self->log->logconfess("emailmarketing_name not specified:".Dumper($attrs))
+        if (!defined($$attrs{emailmarketing_name}));
+    $self->log->logconfess("prospectlist_name not specified:".Dumper($attrs))
+        if (!defined($$attrs{prospectlist_name}));
+    $self->log->logconfess("related_type not specified:".Dumper($attrs))
+        if (!defined($$attrs{related_type}));
+    $self->log->logconfess("email not specified:".Dumper($attrs))
+        if (!defined($$attrs{email}));
+    $self->log->logconfess("related_type is not $CONTACTS, $LEADS, or $ACCOUNTS:".Dumper($attrs))
         if ($$attrs{related_type} ne $CONTACTS && $$attrs{related_type} ne $LEADS &&
 	    $$attrs{related_type} ne $ACCOUNTS);
-    confess "related_id not specified:".Dumper($attrs)
-        if (!exists($$attrs{related_id}));
+    $self->log->logconfess("related_id not specified:".Dumper($attrs))
+        if (!defined($$attrs{related_id}));
     # Just verify that the related_id and related_type exists
-    my $entry = $self->get_module_entry($$attrs{related_type}, $$attrs{related_id});
     my $mail = $self->get_module_attribute($$attrs{related_type}, $$attrs{related_id}, 'email1');
-    confess "No email1 attribute for module and id ".$$attrs{related_type}." ".$$attrs{related_id}.""
+    $self->log->logconfess("No email1 attribute for module and id ".$$attrs{related_type}." ".$$attrs{related_id}."")
         if (!$mail);
+    # TODO verify $mail = $$attrs{email}
     return $mail;
 }
 
@@ -2885,9 +2914,12 @@ sub send_prospectlist_marketing_email_force {
     my $mail = $self->_send_prospectlist_marketing_email_force_verify_params($attrs);
 
     # Get parameters
-    my $campaignid = $self->get_campaignid_by_name($$attrs{campaign_name});
-    my $marketingid = $self->get_emailmarketingid_by_name($$attrs{emailmarketing_name});
-    my $prospectlistid = $self->get_prospectlistid_by_name($$attrs{prospectlist_name});
+    my $campaignid = $self->get_campaignid_by_name($$attrs{campaign_name})
+        or $self->log->logcroack("Campaign \"$$attrs{campaign_name}\" not found");
+    my $marketingid = $self->get_emailmarketingid_by_name($$attrs{emailmarketing_name})
+        or $self->log->logcroack("Email marketing \"$$attrs{emailmarketing_name}\" not found");
+    my $prospectlistid = $self->get_prospectlistid_by_name($$attrs{prospectlist_name})
+        or $self->log->logcroack("Prospect list \"$$attrs{prospectlist_name}\" not found");
     my $userid = $self->get_unique_module_id($USERS, 'users.sugar_login = "'.$self->restuser.'"');
     # Delete existing emails sent either leads or contacts which have the
     # email address
@@ -3038,8 +3070,8 @@ sub get_ids_from_campaignlog {
     my ($self, $attributes) = @_;
     my @required_keys = ('campaign_id', 'target_id', 'target_type', 'list_id', 'marketing_id', 'email');
     foreach (@required_keys) {
-        confess "key $_ not found in attributes".Dumper($attributes)
-            if (!exists($$attributes{$_}) && $$attributes{$_});
+        $self->log->logconfess("key $_ not found in attributes: ".Dumper($attributes))
+            unless defined $$attributes{$_};
     }
     my $query = "( campaign_log.campaign_id = '".$$attributes{'campaign_id'}.
         "' AND campaign_log.target_id = '".$$attributes{'target_id'}.
@@ -3376,6 +3408,22 @@ sub DEMOLISH {
 no Moose;
 __PACKAGE__->meta->make_immutable;
 1;
+
+=head2 update
+
+Save the values of a Net::SugarCRM::Entry
+
+=cut
+
+sub update {
+    # Update Net::SugarCRM::Entry in CRM
+    my ($self, $entry) = @_;
+    return $self->update_module_entry(
+        $entry->{module_name},
+        $entry->{id},
+        $entry->{name_value_list});
+}
+
 =head1 TODO
 
 =over 4
@@ -3452,7 +3500,5 @@ A copy of the GNU General Public License is available in the source tree;
 if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-
 =cut
-
 1; # End of Net::SugarCRM

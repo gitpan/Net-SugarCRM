@@ -64,17 +64,17 @@ my $contact_entry = {
 my $campaignid = $s->get_campaignid_by_name($Test::testcampaign);
 ok($campaignid, "The campaing id for $Test::testcampaign was $campaignid");
 my $campaign = $s->get_campaign($campaignid);
-is(ref $campaign, 'HASH',"Got campaing data back");
+is(ref $campaign, 'Net::SugarCRM::Entry',"Got campaing data back");
 is($s->get_campaign_attribute($campaignid, 'name'), $Test::testcampaign, "Check for the test campaign name");
 
 my $prospectlistid = $s->get_prospectlistid_by_name($Test::testprospectlist);
 ok($prospectlistid, "The prospectlistid was $prospectlistid for $Test::testprospectlist");
-is(ref $s->get_prospectlist($prospectlistid), 'HASH',"Got prospect_list data back");
+is(ref $s->get_prospectlist($prospectlistid), 'Net::SugarCRM::Entry',"Got prospect_list data back");
 is($s->get_prospectlist_attribute($prospectlistid, 'name'), $Test::testprospectlist, "Check for the test prospect_list name");
 
 my $emailmarketingid = $s->get_emailmarketingid_by_name($Test::testemailmarketing);
 ok($emailmarketingid, "The emailmarketingid was $emailmarketingid for $Test::testemailmarketing");
-is(ref $s->get_emailmarketing($emailmarketingid), 'HASH',"Got prospect_list data back");
+is(ref $s->get_emailmarketing($emailmarketingid), 'Net::SugarCRM::Entry',"Got prospect_list data back");
 is($s->get_emailmarketing_attribute($emailmarketingid, 'name'), $Test::testemailmarketing, "Check for the test email_marketing name");
 
 
