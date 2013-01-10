@@ -1,5 +1,12 @@
 Revision history for Net-SugarCRM
 
+2.17725 10/01/2013
+        Slight change of api (use of Net::SugarCRM::Entry)
+        using logconfess and logcroak from log4perl instead of confess and croak
+        New .pm for Net::SugarCRM::Entry
+        better error handling in _rest_request_no_json
+        use http "keep alive" for api connections
+        use Log::Log4perl instead of MooseX::Log::Log4perl to prevent sending log messages in random categories
 1.14455 10/03/2012
         Added patch for get_module_link_ids get_contact_account_ids from Phil Hallows http://www.globemicro.com
 1.12990 18/11/2011

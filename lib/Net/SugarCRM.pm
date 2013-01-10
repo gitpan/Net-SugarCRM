@@ -38,14 +38,11 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 17723 $
-
+Version $Revision: 17728 $
 
 =cut
 
-our $VERSION = sprintf "2.%05d", q$Revision: 17723 $ =~ /(\d+)/xg;
-
-
+our $VERSION = sprintf "2.%05d", q$Revision: 17728 $ =~ /(\d+)/xg;
 
 =head1 DESCRIPTION
 
