@@ -16,7 +16,8 @@ Creates a new entry
 
 sub new {
     my $class = shift;
-    my $self = shift // {};
+    my $self = shift;
+    $self = {} if (!$self);
     return bless $self, $class;
 }
 

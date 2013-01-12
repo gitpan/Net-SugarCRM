@@ -17,6 +17,9 @@ if(!(Log::Log4perl->initialized()) && $ENV{TEST_AUTHOR_SUGAR} eq 'DEBUG') {
     Log::Log4perl->easy_init($Log::Log4perl::DEBUG);
 }
 
+my $sleep = $ENV{NOSLEEP} ? 0 : 1;
+
+
 my ($volume,$directories,$file) = File::Spec->splitpath($0);
 push @INC, $directories;
 my $defaults = File::Spec->catfile('lib', 'defaults.pl');
@@ -139,9 +142,9 @@ my $emailman_attrs = {
 };
 ok($s->add_to_emailman($emailman_attrs), "Added mails to emailman");
 
-diag("Sleeping for 90 seconds");
+diag("Sleeping for 65 seconds");
 $s->log->level($Log::Log4perl::ERROR);
-sleep 90;
+sleep 65 if ($sleep);
 
 
 # Delete contactid and leadid from the list

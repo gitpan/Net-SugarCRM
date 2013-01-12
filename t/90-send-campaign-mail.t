@@ -17,6 +17,8 @@ if(!(Log::Log4perl->initialized()) && $ENV{TEST_AUTHOR_SUGAR} eq 'DEBUG') {
     Log::Log4perl->easy_init($Log::Log4perl::DEBUG);
 }
 
+my $sleep = $ENV{NOSLEEP} ? 0 : 1;
+
 my ($volume,$directories,$file) = File::Spec->splitpath($0);
 push @INC, $directories;
 my $defaults = File::Spec->catfile('lib', 'defaults.pl');
@@ -66,8 +68,8 @@ my $attrs;
 }
 
 ok($s->send_prospectlist_marketing_email_force($attrs), "Email sent to the outbound queue");
-diag("Sleeping 90 seconds");
-sleep 90;
+diag("Sleeping 65 seconds");
+sleep 65 if ($sleep);
 is($s->delete_lead_by_id($leadid), 1, "Deleting leadid $leadid");
 
 done_testing();

@@ -1,5 +1,7 @@
 Revision history for Net-SugarCRM
 
+2.17738 12/01/2013
+	Fix Net::SugarCRM::Entry to allow for perl < 5.10
 2.17725 10/01/2013
         Slight change of api (use of Net::SugarCRM::Entry)
         using logconfess and logcroak from log4perl instead of confess and croak

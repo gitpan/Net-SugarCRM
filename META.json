@@ -4,9 +4,9 @@
       "Nito Martinez <Nito@Qindel.ES>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.110440",
+   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.112150",
    "license" : [
-      "gpl_1"
+      "open_source"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -43,7 +43,7 @@
    "provides" : {
       "Net::SugarCRM" : {
          "file" : "lib/Net/SugarCRM.pm",
-         "version" : "2.17728"
+         "version" : "2.17738"
       },
       "Net::SugarCRM::Entry" : {
          "file" : "lib/Net/SugarCRM/Entry.pm",
@@ -56,5 +56,5 @@
          "http://opensource.org/licenses/gpl-license.php"
       ]
    },
-   "version" : "2.17728"
+   "version" : "2.17738"
 }
