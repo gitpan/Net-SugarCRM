@@ -38,11 +38,11 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 17738 $
+Version $Revision: 19983 $
 
 =cut
 
-our $VERSION = sprintf "2.%05d", q$Revision: 17738 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "2.%05d", q$Revision: 19983 $ =~ /(\d+)/xg;
 
 
 =head1 DESCRIPTION
@@ -307,6 +307,14 @@ has 'log' => (
     default => sub { Log::Log4perl->get_logger },
 );
 
+=head2 max_results
+
+The maximum number of results a get_entry_list returns. By default it is 1000
+
+=cut
+
+has 'max_results' => ( is => 'rw', isa => 'Int', default => 1000 );
+
 =head1 METHODS
 
 
@@ -526,7 +534,7 @@ Output:
 sub get_module_entries {
     my ($self, $module, $query) = @_;
     $query =~ s/"/\\"/xg;
-    my $rest_data = '{"session": "'.$self->sessionid.'", "module_name": "'.$module.'", "query": "'.$query.'" } ';
+    my $rest_data = '{"session": "'.$self->sessionid.'", "module_name": "'.$module.'", "query": "'.$query.'", "order_by": "", "offset": "", "select_fields": "", "link_name_to_fields_array": "", "max_results": "'.$self->max_results.'" } ';
     my $response = $self->_rest_request('get_entry_list', $rest_data);
     $self->log->debug("Module entry for module $module with query <$query> found was:".Dumper($response));
     if ($response->{total_count} == 0) {
