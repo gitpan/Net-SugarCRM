@@ -79,7 +79,13 @@ my $opportunityid2 = $s->create_opportunity($opportunity_entry);
 ok($opportunityid2, "2nd opportunity created with opportunityid $opportunityid2");
 
 
-ok(!defined(eval {  $s->get_unique_opportunity_id($query); 1}), "An error or more than one opportunityid found for query $query: $@");
+ok(!defined(eval { $s->get_unique_opportunity_id($query); 1 }), "An error or more than one opportunityid found for query $query: $@");
+
+my $ids = $s->get_module_link_ids("Accounts", "opportunities", $accountid);
+my %linked_opportunities = map { $_ => 1 } (@$ids);
+
+ok($linked_opportunities{$opportunityid}, "Opportunity id $opportunityid is linked to account $accountid");
+ok($linked_opportunities{$opportunityid2}, "Opportunity id $opportunityid2 is linked to account $accountid");
 
 is($s->delete_opportunity_by_id($opportunityid), 1, "Deleting opportunityid $opportunityid");
 is($s->delete_opportunity_by_id($opportunityid2), 1, "Deleting opportunityid $opportunityid");

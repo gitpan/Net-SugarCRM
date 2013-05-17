@@ -1,5 +1,7 @@
 Revision history for Net-SugarCRM
 
+2.20254 17/05/2013
+	Fix bug in get_module_link_ids and enhanced documentation
 2.19983 12/01/2013
 	Allow to set max_results to retrieve more than 20 records. The default is set to 1000
 2.17738 12/01/2013

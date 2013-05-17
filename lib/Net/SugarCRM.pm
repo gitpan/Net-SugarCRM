@@ -12,7 +12,7 @@ use Try::Tiny;
 use HTTP::Request::Common;
 use DBI;
 use Carp qw(croak);
-
+use Data::Dumper;
 use Net::SugarCRM::Entry;
 
 BEGIN {
@@ -38,11 +38,11 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 19983 $
+Version $Revision: 20254 $
 
 =cut
 
-our $VERSION = sprintf "2.%05d", q$Revision: 19983 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "2.%05d", q$Revision: 20254 $ =~ /(\d+)/xg;
 
 
 =head1 DESCRIPTION
@@ -820,18 +820,36 @@ Input:
  * module name
  * link_field_name
  * module id
+ * query (which might be empty)
+ * related_fields (which might be empty and if not it should be a reference to an array of fields). By default this is ["id"]
 
 Output:
 
  * A reference to an array of related ids
 
+Example: Get all the opportunity ids of account id $accountid
+
+my $ids = $s->get_module_link_ids("Accounts", "opportunities", $accountid);
+print Dumper($ids);
+
+
 =cut
 
 sub get_module_link_ids {
-    my ($self, $module, $link, $id) = @_;
+    my ($self, $module, $link, $id, $query, $relatedfields) = @_;
     
+    $query = '' if (!$query);
+    $relatedfields = [ 'id' ] if (ref $relatedfields ne 'ARRAY');
+    my $relatedfieldsjson;
+    {
+	local $Data::Dumper::Indent = 0;
+	local $Data::Dumper::Useqq = 1;
+	local $Data::Dumper::Terse = 1;
+	$relatedfieldsjson = Dumper($relatedfields);
+    }
+
     my $sessionid = $self->sessionid;
-    my $rest_data = qq({"session":"$sessionid","module_name":"$module","module_id":"$id","link_field_name":"$link"});
+    my $rest_data = qq({"session":"$sessionid","module_name":"$module","module_id":"$id","link_field_name":"$link","related_module_query":"$query","related_fields":$relatedfieldsjson});
 
     my $response = $self->_rest_request('get_relationships', $rest_data);
     $self->log->debug("Module entry for module $module with id <$id> found was:".Dumper($response));

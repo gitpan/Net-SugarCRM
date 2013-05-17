@@ -1,5 +1,7 @@
 Changes
 ignore.txt
+Build.PL
+Makefile.PL
 lib/Net/SugarCRM.pm
 lib/Net/SugarCRM/Entry.pm
 lib/Net/SugarCRM/Tutorial.pod
@@ -26,5 +28,3 @@ t/manifest.t
 t/perlcritic.t
 t/pod-coverage.t
 t/pod.t
-Makefile.PL
-Build.PL
