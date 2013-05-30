@@ -52,4 +52,9 @@ sub AUTOLOAD {
     }
 }
 
+sub has {
+    my ($self, $field) = @_;
+    return exists($self->{name_value_list}{$field});
+}
+
 1;

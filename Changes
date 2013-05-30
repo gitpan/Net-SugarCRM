@@ -1,5 +1,7 @@
 Revision history for Net-SugarCRM
 
+2.20414 30/05/2013
+	Add has method in Net::SugarCRM::Entry
 2.20254 17/05/2013
 	Fix bug in get_module_link_ids and enhanced documentation
 2.19983 12/01/2013
