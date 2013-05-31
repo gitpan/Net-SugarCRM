@@ -52,6 +52,11 @@ sub AUTOLOAD {
     }
 }
 
+=head2 has
+
+Returns true for a given attribute if it exists in this entry.
+
+=cut
 sub has {
     my ($self, $field) = @_;
     return exists($self->{name_value_list}{$field});

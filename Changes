@@ -1,5 +1,7 @@
 Revision history for Net-SugarCRM
 
+2.20449 31/05/2013
+	Add has pod
 2.20414 30/05/2013
 	Add has method in Net::SugarCRM::Entry
 2.20254 17/05/2013
