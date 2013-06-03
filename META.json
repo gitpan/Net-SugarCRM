@@ -41,7 +41,7 @@
    "provides" : {
       "Net::SugarCRM" : {
          "file" : "lib/Net/SugarCRM.pm",
-         "version" : "3.20466"
+         "version" : "2.20469"
       },
       "Net::SugarCRM::Entry" : {
          "file" : "lib/Net/SugarCRM/Entry.pm"
@@ -53,5 +53,5 @@
          "http://opensource.org/licenses/gpl-license.php"
       ]
    },
-   "version" : "3.20466"
+   "version" : "2.20469"
 }

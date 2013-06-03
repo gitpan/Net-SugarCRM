@@ -1,6 +1,6 @@
 Revision history for Net-SugarCRM
 
-3.20466 03/06/2013
+2.20469 03/06/2013
 	Use of lighter Moo instead of Moose
 2.20449 31/05/2013
 	Add has pod
