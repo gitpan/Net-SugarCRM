@@ -4,9 +4,9 @@
       "Nito Martinez <Nito@Qindel.ES>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.110440",
+   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.131490",
    "license" : [
-      "gpl_1"
+      "open_source"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -16,7 +16,7 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Test::More" : 0
+            "Test::More" : "0"
          }
       },
       "configure" : {
@@ -26,28 +26,25 @@
       },
       "runtime" : {
          "requires" : {
-            "DBI" : 0,
-            "DateTime" : 0,
-            "File::Spec" : 0,
-            "JSON" : 0,
-            "LWP::UserAgent" : 0,
-            "Log::Log4perl" : 0,
-            "Moose" : 0,
-            "MooseX::Log::Log4perl" : 0,
-            "MooseX::Types::Path::Class" : 0,
-            "Readonly" : 0,
-            "Try::Tiny" : 0
+            "DBI" : "0",
+            "DateTime" : "0",
+            "File::Spec" : "0",
+            "JSON" : "0",
+            "LWP::UserAgent" : "0",
+            "Log::Log4perl" : "0",
+            "Moo" : "0",
+            "Readonly" : "0",
+            "Try::Tiny" : "0"
          }
       }
    },
    "provides" : {
       "Net::SugarCRM" : {
          "file" : "lib/Net/SugarCRM.pm",
-         "version" : "2.20449"
+         "version" : "3.20466"
       },
       "Net::SugarCRM::Entry" : {
-         "file" : "lib/Net/SugarCRM/Entry.pm",
-         "version" : 0
+         "file" : "lib/Net/SugarCRM/Entry.pm"
       }
    },
    "release_status" : "stable",
@@ -56,5 +53,5 @@
          "http://opensource.org/licenses/gpl-license.php"
       ]
    },
-   "version" : "2.20449"
+   "version" : "3.20466"
 }

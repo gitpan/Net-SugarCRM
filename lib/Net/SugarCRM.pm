@@ -1,6 +1,8 @@
 package Net::SugarCRM;
 
-use Moose;
+use strict;
+use warnings;
+use Moo;
 use Log::Log4perl qw(:easy);
 use LWP::UserAgent;
 use DateTime;
@@ -38,11 +40,11 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 20449 $
+Version $Revision: 20466 $
 
 =cut
 
-our $VERSION = sprintf "2.%05d", q$Revision: 20449 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "3.%05d", q$Revision: 20466 $ =~ /(\d+)/xg;
 
 
 =head1 DESCRIPTION
@@ -145,7 +147,7 @@ The default url to access, if not defined http://localhost/sugarcrm/service/v4/r
 
 =cut
 
-has 'url' => ( is => 'rw', default => 'http://localhost/sugarcrm/service/v4/rest.php');
+has 'url' => ( is => 'rw', default => sub { 'http://localhost/sugarcrm/service/v4/rest.php' });
 
 =head2 restuser
 
@@ -153,7 +155,7 @@ the username for login in the rest method
 
 =cut
 
-has 'restuser' => (is => 'rw', default => '');
+has 'restuser' => (is => 'rw', default => sub { '' });
 
 =head2 restpasswd
 
@@ -161,15 +163,15 @@ the password for login in the rest method
 
 =cut
 
-has 'restpasswd' => (is => 'rw', default => '');
+has 'restpasswd' => (is => 'rw', default => sub { '' });
 
-=head2 useragent
+=head2 globalua
 
 The default useragent
 
 =cut
 
-has 'globalua' => ( is => 'rw', isa => 'LWP::UserAgent', builder => '_buildUa');
+has 'globalua' => ( is => 'rw', builder => '_buildUa');
 
 sub _buildUa {
     my $self = shift;
@@ -187,7 +189,15 @@ The application name to be used for the rest method in sugar
 
 =cut
 
-has 'application' => ( is => 'rw', default => "provision_qvd" );
+has 'application' => ( is => 'rw', default => sub { 'provision_qvd' } );
+
+=head2 email_attr
+
+The SugarCRM attribute name for email
+
+=cut
+
+has 'email_attr' => (is => 'rw', default => sub { 'email1' });
 
 =head2 required_attr
 
@@ -195,7 +205,6 @@ Hash reference to the required attrs for a lead, contact, account
 
 =cut
 
-has 'email_attr' => (is => 'rw', default => 'email1');
 has 'required_attr' => 
     ( is => 'rw', default => 
       sub { 
@@ -255,21 +264,21 @@ DBI:mysql:database=qvd;host=localhost
 
 =cut 
 
-has 'dsn' => (is => 'rw', default => 'DBI:mysql:database=theqvdsugarcrm;host=localhost');
+has 'dsn' => (is => 'rw', default => sub { 'DBI:mysql:database=theqvdsugarcrm;host=localhost' });
 
 =head2 dbuser
 
 the user to connect to the database
 
 =cut
-has 'dbuser' => (is => 'rw', isa => 'Str', default => '');
+has 'dbuser' => (is => 'rw', default => sub { '' } );
 
 =head2 dbpassword
 
 the password of user to connect to the database
 
 =cut
-has 'dbpassword' => (is => 'rw', isa => 'Str', default => '');
+has 'dbpassword' => (is => 'rw', default => sub { '' } );
 
 =head2 dbh
 
@@ -313,7 +322,7 @@ The maximum number of results a get_entry_list returns. By default it is 1000
 
 =cut
 
-has 'max_results' => ( is => 'rw', isa => 'Int', default => 1000 );
+has 'max_results' => ( is => 'rw', default => sub { 1000 } );
 
 =head1 METHODS
 
@@ -376,13 +385,13 @@ On error the method croaks
 sub login {
     my ($self) = @_;
 
-
+    my $application = "provisin_qvd"; #$self->application;
     my $rest_data = encode_json({
         user_auth => {
             user_name => $self->restuser,
             password => $self->restpasswd
         },
-       application => $self->application});
+       application => $application});
 
 
     my $response = $self->_rest_request('login', $rest_data);
@@ -3428,10 +3437,6 @@ sub DEMOLISH {
     $self->logout;
     return;
 }
-
-no Moose;
-__PACKAGE__->meta->make_immutable;
-1;
 
 =head2 update
 

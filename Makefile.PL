@@ -11,9 +11,7 @@ WriteMakefile
                    'JSON' => 0,
                    'LWP::UserAgent' => 0,
                    'Log::Log4perl' => 0,
-                   'Moose' => 0,
-                   'MooseX::Log::Log4perl' => 0,
-                   'MooseX::Types::Path::Class' => 0,
+                   'Moo' => 0,
                    'Readonly' => 0,
                    'Test::More' => 0,
                    'Try::Tiny' => 0
