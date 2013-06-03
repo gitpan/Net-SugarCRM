@@ -16,9 +16,10 @@ name: Net-SugarCRM
 provides:
   Net::SugarCRM:
     file: lib/Net/SugarCRM.pm
-    version: 3.20471
+    version: 3.20472
   Net::SugarCRM::Entry:
     file: lib/Net/SugarCRM/Entry.pm
+    version: 3.20471
 requires:
   DBI: 0
   DateTime: 0
@@ -31,4 +32,4 @@ requires:
   Try::Tiny: 0
 resources:
   license: http://opensource.org/licenses/gpl-license.php
-version: 3.20471
+version: 3.20472

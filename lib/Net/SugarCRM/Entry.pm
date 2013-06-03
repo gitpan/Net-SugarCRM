@@ -3,6 +3,9 @@ package Net::SugarCRM::Entry;
 use warnings;
 use strict;
 
+
+our $VERSION = sprintf "3.%05d", q$Revision: 20471 $ =~ /(\d+)/xg;
+
 =head1 Net::SugarCRM::Entry
 
 Represens an entry from Sugar
