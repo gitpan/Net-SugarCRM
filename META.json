@@ -32,7 +32,7 @@
             "JSON" : "0",
             "LWP::UserAgent" : "0",
             "Log::Log4perl" : "0",
-            "Moo" : "0",
+            "Moose" : "0",
             "Readonly" : "0",
             "Try::Tiny" : "0"
          }
@@ -41,7 +41,7 @@
    "provides" : {
       "Net::SugarCRM" : {
          "file" : "lib/Net/SugarCRM.pm",
-         "version" : "3.20472"
+         "version" : "3.20492"
       },
       "Net::SugarCRM::Entry" : {
          "file" : "lib/Net/SugarCRM/Entry.pm",
@@ -54,5 +54,5 @@
          "http://opensource.org/licenses/gpl-license.php"
       ]
    },
-   "version" : "3.20472"
+   "version" : "3.20492"
 }

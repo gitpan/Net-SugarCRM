@@ -1,8 +1,6 @@
 package Net::SugarCRM;
 
-use strict;
-use warnings;
-use Moo;
+use Moose;
 use Log::Log4perl qw(:easy);
 use LWP::UserAgent;
 use DateTime;
@@ -40,11 +38,11 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 20472 $
+Version $Revision: 20492 $
 
 =cut
 
-our $VERSION = sprintf "3.%05d", q$Revision: 20472 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "3.%05d", q$Revision: 20492 $ =~ /(\d+)/xg;
 
 =head1 DESCRIPTION
 

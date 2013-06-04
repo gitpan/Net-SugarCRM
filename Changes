@@ -1,5 +1,7 @@
 Revision history for Net-SugarCRM
 
+3.20492 04/06/2013
+	Reuse of Moose because the compatibility with Any::Moose is still not ready
 3.20472 03/06/2013
 	Use of lighter Moo instead of Moose
 2.20449 31/05/2013
