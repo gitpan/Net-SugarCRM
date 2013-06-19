@@ -38,11 +38,11 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 20492 $
+Version $Revision: 20698 $
 
 =cut
 
-our $VERSION = sprintf "3.%05d", q$Revision: 20492 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "3.%05d", q$Revision: 20698 $ =~ /(\d+)/xg;
 
 =head1 DESCRIPTION
 
@@ -2945,11 +2945,11 @@ sub send_prospectlist_marketing_email_force {
 
     # Get parameters
     my $campaignid = $self->get_campaignid_by_name($$attrs{campaign_name})
-        or $self->log->logcroack("Campaign \"$$attrs{campaign_name}\" not found");
+        or $self->log->logcroak("Campaign \"$$attrs{campaign_name}\" not found");
     my $marketingid = $self->get_emailmarketingid_by_name($$attrs{emailmarketing_name})
-        or $self->log->logcroack("Email marketing \"$$attrs{emailmarketing_name}\" not found");
+        or $self->log->logcroak("Email marketing \"$$attrs{emailmarketing_name}\" not found");
     my $prospectlistid = $self->get_prospectlistid_by_name($$attrs{prospectlist_name})
-        or $self->log->logcroack("Prospect list \"$$attrs{prospectlist_name}\" not found");
+        or $self->log->logcroak("Prospect list \"$$attrs{prospectlist_name}\" not found");
     my $userid = $self->get_unique_module_id($USERS, 'users.sugar_login = "'.$self->restuser.'"');
     # Delete existing emails sent either leads or contacts which have the
     # email address

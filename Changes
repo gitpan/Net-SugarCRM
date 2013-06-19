@@ -1,7 +1,10 @@
 Revision history for Net-SugarCRM
 
+3.20698 19/06/2013
+	Fix syntax error logcroack -> logcroak
 3.20492 04/06/2013
-	Reuse of Moose because the compatibility with Any::Moose is still not ready
+	Reuse of Moose because the compatibility with Any::Moose is still not ready. It should be possible
+	to change the line of use Moose with use Moo, if you don't use Moose anywhere else
 3.20472 03/06/2013
 	Use of lighter Moo instead of Moose
 2.20449 31/05/2013
