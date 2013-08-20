@@ -4,7 +4,7 @@
       "Nito Martinez <Nito@Qindel.ES>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.131490",
+   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.112150",
    "license" : [
       "open_source"
    ],
@@ -16,7 +16,7 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Test::More" : "0"
+            "Test::More" : 0
          }
       },
       "configure" : {
@@ -26,22 +26,22 @@
       },
       "runtime" : {
          "requires" : {
-            "DBI" : "0",
-            "DateTime" : "0",
-            "File::Spec" : "0",
-            "JSON" : "0",
-            "LWP::UserAgent" : "0",
-            "Log::Log4perl" : "0",
-            "Moose" : "0",
-            "Readonly" : "0",
-            "Try::Tiny" : "0"
+            "DBI" : 0,
+            "DateTime" : 0,
+            "File::Spec" : 0,
+            "JSON" : 0,
+            "LWP::UserAgent" : 0,
+            "Log::Log4perl" : 0,
+            "Moose" : 0,
+            "Readonly" : 0,
+            "Try::Tiny" : 0
          }
       }
    },
    "provides" : {
       "Net::SugarCRM" : {
          "file" : "lib/Net/SugarCRM.pm",
-         "version" : "3.20698"
+         "version" : "3.21345"
       },
       "Net::SugarCRM::Entry" : {
          "file" : "lib/Net/SugarCRM/Entry.pm",
@@ -54,5 +54,5 @@
          "http://opensource.org/licenses/gpl-license.php"
       ]
    },
-   "version" : "3.20698"
+   "version" : "3.21345"
 }

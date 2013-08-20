@@ -38,11 +38,11 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 20698 $
+Version $Revision: 21345 $
 
 =cut
 
-our $VERSION = sprintf "3.%05d", q$Revision: 20698 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "3.%05d", q$Revision: 21345 $ =~ /(\d+)/xg;
 
 =head1 DESCRIPTION
 
@@ -904,7 +904,7 @@ sub update_module_entry {
         $self->log->info( "No entries updated found for in module $module and id $id and sessionid ".$self->sessionid."\n");
         return ();
     }
-    $self->log->info( "Successfully updated entry in module $module with id $id and sessionid ".$self->sessionid."\n");
+    $self->log->info( "Successfully updated entry in module $module with id $id and sessionid ".$self->sessionid.". Attributes: ".join(",", (%$attributes))."\n");
 
     return 1;
     
