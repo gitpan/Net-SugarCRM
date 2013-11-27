@@ -38,11 +38,12 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 21345 $
+Version $Revision: 22375 $
+
 
 =cut
 
-our $VERSION = sprintf "3.%05d", q$Revision: 21345 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "3.%05d", q$Revision: 22375 $ =~ /(\d+)/xg;
 
 =head1 DESCRIPTION
 
@@ -411,7 +412,7 @@ sub logout {
     my ($self) = @_;
 
     if (!defined($self->_sessionid)) {
-        $self->log->info("logging out for user ".$self->restuser." which was not logged in, not doing anything");
+        $self->log->error("logging out for user ".$self->restuser." which was not logged in, not doing anything");
         return;
     }
     my $rest_data = encode_json({
@@ -420,14 +421,21 @@ sub logout {
     my $res = try {
         $self->_rest_request_no_json('logout', $rest_data);
     } catch {
-        $self->log->error("Error in SugarCRM: method returned invalid JSON: $rest_data");
+        $self->log->error("Error in SugarCRM: method returned invalid JSON: $rest_data. $_");
     };
-    if ($res->content ne 'null') {
-        $self->log->error("Error logging out user ".$self->restuser." <".$res->status_line."> fetching ".Dumper($res->content)) ;
-    } else {
-        $self->log->debug( "Successfully logged out user ".$self->restuser." with session id ".$self->_sessionid);
-        $self->_sessionid(undef);
-    }
+
+    try {
+	if ($res->content ne 'null') {
+	    $self->log->error("Error logging out user ".$self->restuser." <".$res->status_line."> fetching ".Dumper($res->content)) ;
+	} else {
+	    # On DEMOLISH sometimes it does not exist
+	    $self->log->debug( "Successfully logged out user ".$self->restuser." with session id ".$self->_sessionid);
+	    $self->_sessionid(undef);
+	}
+    } catch  {
+        $self->log->error("Error logging out user logout result is not defined:".Dumper($res)) ;
+    };
+
     return;
 }
 
@@ -3424,12 +3432,12 @@ sub delete_ids_from_campaignlog {
 
 # }
 
-=head2 DEMOLISH
+=head2 DESTROY
 
 if the object is dereferenced and the sessionid is defined a logout is issued
 
 =cut
-sub DEMOLISH {
+sub DESTROY {
     my ($self) = @_;
     $self->logout;
     return;

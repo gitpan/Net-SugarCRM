@@ -2,7 +2,7 @@ package Net::SugarCRM::Entry;
 
 use warnings;
 use strict;
-
+use JSON;
 
 our $VERSION = sprintf "3.%05d", q$Revision: 20471 $ =~ /(\d+)/xg;
 
@@ -49,6 +49,9 @@ sub AUTOLOAD {
     if (exists $self->{name_value_list}{$field}) {
         my $ret = $self->{name_value_list}{$field}{value};
         $self->{name_value_list}{$field}{value} = $_[0] if ($#_ > -1);
+	if (ref $ret eq 'JSON::XS::Boolean') {
+	    $ret = '';
+	}
         return $ret;
     } else {
         confess("$field: No such attribute");
