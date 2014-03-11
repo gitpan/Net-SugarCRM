@@ -1,5 +1,7 @@
 Revision history for Net-SugarCRM
 
+3.23126 11/03/2014
+	Fix bug https://rt.cpan.org/Ticket/Display.html?id=93696
 3.22375 27/11/2013
 	Handle SugarCRM responses for JSON::Boolean empty responses for dates
 3.21344 20/08/2013

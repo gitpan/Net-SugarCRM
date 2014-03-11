@@ -38,12 +38,12 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 22375 $
+Version $Revision: 23126 $
 
 
 =cut
 
-our $VERSION = sprintf "3.%05d", q$Revision: 22375 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "3.%05d", q$Revision: 23126 $ =~ /(\d+)/xg;
 
 =head1 DESCRIPTION
 
@@ -387,7 +387,8 @@ sub login {
     my $rest_data = encode_json({
         user_auth => {
             user_name => $self->restuser,
-            password => $self->restpasswd
+            password => $self->restpasswd,
+            encryption => 'PLAIN'
         },
        application => $application});
 

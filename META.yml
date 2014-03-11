@@ -5,10 +5,10 @@ author:
 build_requires:
   Test::More: 0
 configure_requires:
-  Module::Build: 0.38
+  Module::Build: 0.42
 dynamic_config: 1
-generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.112150'
-license: open_source
+generated_by: 'Module::Build version 0.4203, CPAN::Meta::Converter version 2.112150'
+license: gpl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
@@ -16,7 +16,7 @@ name: Net-SugarCRM
 provides:
   Net::SugarCRM:
     file: lib/Net/SugarCRM.pm
-    version: 3.22375
+    version: 3.23126
   Net::SugarCRM::Entry:
     file: lib/Net/SugarCRM/Entry.pm
     version: 3.20471
@@ -32,4 +32,4 @@ requires:
   Try::Tiny: 0
 resources:
   license: http://opensource.org/licenses/gpl-license.php
-version: 3.22375
+version: 3.23126
