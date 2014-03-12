@@ -2,16 +2,18 @@
 package Test;
 use File::Temp;
 
-# our $login='admin';
-# our $pass='adminpass';
-# our $url='http://localhost/sugarcrm/service/v4/rest.php';
-# our $testcampaign='Demo Campaign';
-# our $testprospectlist='Demo users';
-# our $testemailmarketing='Demo User send password';
-# # These are needed only to send emails in campaigns
-# our $testdsn='DBI:mysql:database=theqvdsugarcrm;host=db.prepro.qindel.com';
-# our $testdbuser='sugarcrm';
-# our $testdbpass='pass';
-# our $testemail1='myemail1@mydomain.org';
-# our $testemail2='myemail2@mydomain.org';
+our $login='scrm';
+our $pass='MyQVDscrm!!';
+our $url='http://intranet.int.qindel.com/sugarcrm/service/v4/rest.php';
+our $testcampaign='QVD Demo Campaign';
+our $testprospectlist='Demo users';
+#our $testprospectlist='Demo users password reminder';
+#our $testemailmarketing='Demo User send password';
+our $testemailmarketing='Demo User send password';
+# These are needed only to send emails in campaigns
+our $testdsn='DBI:mysql:database=theqvdsugarcrm;host=db.int.qindel.com';
+our $testdbuser='theqvdsugarcrm';
+our $testdbpass='Lpwdtheqvd123!';
+our $testemail1='nito@deiro.com';
+our $testemail2='nito.martinez@deiro.com';
 1;

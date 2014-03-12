@@ -33,6 +33,20 @@ use_ok('Net::SugarCRM');
     $s->logout;
     ok(!defined($s->_sessionid), "Check that we have effectively logged out");
 }
+
+# Set explicityly PLAIN parameter
+{
+    my $s;
+    $s = Net::SugarCRM->new(url=>$Test::url, restuser=>$Test::login, restpasswd=> $Test::pass, encryption => 'PLAIN');
+    is(ref $s, 'Net::SugarCRM', 'Check that we got a Net::SugarCRM package');
+    my $sessionid = $s->login;
+    ok($sessionid, 'We got a sessionid back after login');
+    is($sessionid, $s->_sessionid, "Check that the sessionid is stored $sessionid");
+    is($sessionid, $s->sessionid, "Check that the sessionid is stored $sessionid");
+    $s->logout;
+    ok(!defined($s->_sessionid), "Check that we have effectively logged out");
+}
+
 # Now try to implicitly log in and out
 {
     my $s;
@@ -56,4 +70,4 @@ use_ok('Net::SugarCRM');
     ok(!defined(eval {$s->sessionid; 1 }), "Error in login");
 }
 
-done_testing(11);
+done_testing(16);

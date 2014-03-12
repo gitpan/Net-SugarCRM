@@ -38,12 +38,12 @@ Net::SugarCRM - A simple module to access SugarCRM via Rest services
 
 =head1 VERSION
 
-Version $Revision: 23126 $
+Version $Revision: 23133 $
 
 
 =cut
 
-our $VERSION = sprintf "3.%05d", q$Revision: 23126 $ =~ /(\d+)/xg;
+our $VERSION = sprintf "3.%05d", q$Revision: 23133 $ =~ /(\d+)/xg;
 
 =head1 DESCRIPTION
 
@@ -65,6 +65,12 @@ See also L<Net::SugarCRM::Tutorial>
 
 =head2 Examples
 
+    # Sometimes the encryption parameter seems necessary
+    # my $s = Net::SugarCRM->new(url=>$Test::url, restuser=>$Test::login, restpasswd=> md5_hex($Test::pass));
+    # or you have to encode the password as md5_hex
+    # my $s = Net::SugarCRM->new(url=>$Test::url, restuser=>$Test::login, restpasswd=> $Test::pass);
+    # 
+    
     my $s = Net::SugarCRM->new(url=>$Test::url, restuser=>$Test::login, restpasswd=> $Test::pass);
     my $lead_entry = {
        email1 => 'batman@justiceleague.org',
@@ -159,6 +165,10 @@ has 'restuser' => (is => 'rw', default => sub { '' });
 
 the password for login in the rest method
 
+Sometimes the encryption parameter seems to be necessary to use plain password (See https://rt.cpan.org/Ticket/Display.html?id=93696), or you can manually encode the password as md5_hex, that is.
+
+ $self->restpasswd(md5_hex('mypass'))
+
 =cut
 
 has 'restpasswd' => (is => 'rw', default => sub { '' });
@@ -187,7 +197,7 @@ The application name to be used for the rest method in sugar
 
 =cut
 
-has 'application' => ( is => 'rw', default => sub { 'provision_qvd' } );
+has 'application' => ( is => 'rw', default => sub { 'net_sugarcrm' } );
 
 =head2 email_attr
 
@@ -376,6 +386,14 @@ it uses the object attributes url, restuser and restpasswd for the login.
 It returns the sessionid. And it also stores the sessionid in the object.
 Normally you don't need to call this method it is implicitly called
 
+On some SugarCRM PRO it seems that it is needed to set $self->encryption('PLAIN')
+
+The code would be something like
+
+ my $sugar = Net::SugarCRM->new(url=>$Test::url, restuser=>$Test::login, restpasswd=> $Test::pass);
+ $sugar->encryption('PLAIN');
+ $sugar->login
+
 On error the method croaks
 
 =cut
@@ -383,15 +401,20 @@ On error the method croaks
 sub login {
     my ($self) = @_;
 
-    my $application = "provisin_qvd"; #$self->application;
-    my $rest_data = encode_json({
-        user_auth => {
+    my $application = $self->application;
+    my $user_auth = {
             user_name => $self->restuser,
-            password => $self->restpasswd,
-            encryption => 'PLAIN'
-        },
-       application => $application});
+            password => $self->restpasswd
+    };
 
+    $user_auth->{encryption} = $self->encryption if ($self->encryption);
+
+    my $rest_data = encode_json({
+        user_auth => $user_auth,
+	application => $application});
+
+    use Data::Dumper;
+    print STDERR Dumper($rest_data);
 
     my $response = $self->_rest_request('login', $rest_data);
     my $sessionid=$response->{id};
@@ -401,11 +424,23 @@ sub login {
 }
 
 
+=head3 encryption
+
+encryption if set it will add the "encryption" parameter to the login service
+REST message.
+
+The valid values currently are "PLAIN", although this is not enforced. 
+If it is undef, the parameter is not passed in the login method.
+
+=cut
+
+has encryption => ( is => 'rw', default => sub { undef } );
+
 =head3 logout
 
 Input: session id
 
-On error the method croaks. Normally you don't need to invoke this method it is implicitly called
+On error the method croaks. Normally you don't need to invoke this method it is implicitly called.
 
 =cut
 
