@@ -1,5 +1,7 @@
 Revision history for Net-SugarCRM
 
+3.23143 13/03/2014
+	Updated test
 3.23133 12/03/2014
 	Added encryption parameter per bug https://rt.cpan.org/Ticket/Display.html?id=93696
 3.23126 11/03/2014
